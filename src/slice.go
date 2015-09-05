@@ -2,7 +2,6 @@ package main
 
 import "fmt"
 
-
 func someWrong() error {
     return fmt.Errorf("sss")
 }
@@ -19,12 +18,11 @@ func main() {
     //err := someWrong()
     //fmt.Printf("%s", err)
     
-    ch := make(chan int)
+    // array & slice
+    arr := [...]string{"hello", "world"}
+    fmt.Printf("arr.len = %d, arr.cap = %d\n", len(arr), cap(arr))
     
-    go func(a chan int) {
-        a <- 11
-        fmt.Printf("goroutine: hello world\n") 
-    } (ch)
-    
-    fmt.Printf("ch = %d\n", <- ch)
+    slice := new([2]int32)[:]
+    slice[0], slice[1] = 123, 456
+    fmt.Printf("slice = %v\n", slice)
 }
