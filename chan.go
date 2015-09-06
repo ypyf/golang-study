@@ -3,12 +3,12 @@ package main
 import "fmt"
 import "time"
 
-func Worker(sem chan int, lock chan bool, id int) {
+func Worker(sem chan int, lock chan<- bool, id int) {
     sem <- 1    // down(P原语, sem++)
     fmt.Println(time.Now().Format("15:04:05"), id)
     time.Sleep(1 * time.Second) // 睡眠1秒钟
     <- sem  // up(V原语, sem--)
-    
+
     lock <- true
 }
 
@@ -18,7 +18,7 @@ func main() {
     for i := 0; i < 10; i++ {
         go Worker(ch, lock, i)
     }
-    
+
     // 等待所有线程退出
     for i := 0; i < 10; i++ {
         <- lock
