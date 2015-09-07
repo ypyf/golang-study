@@ -6,9 +6,9 @@ import "os/signal"
 import "syscall"
 
 func main() {
-    go func() {
-        fmt.Println("Hello Go!")
-    }()
+    go func(x ...int) {
+        fmt.Printf("%v\n", x)
+    }(1,2,3)
     
     ch := make(chan os.Signal)
     signal.Notify(ch, syscall.SIGINT)
