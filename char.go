@@ -4,7 +4,7 @@ import "fmt"
 import "strings"
 
 func main() {
-    // 字符的类型是rune 或 int32，代表一个UNICODE码点
+    // 字符（Unicode码点）的类型是 rune 或 int32
     c := 's'
     fmt.Printf("字符的类型为 %T\n", c)
     
