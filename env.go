@@ -3,6 +3,11 @@ package main
 import "fmt"
 import "os"
 
+//import "strings"
+
 func main() {
-   fmt.Println(os.Getenv("LANG"))
+    for _, e := range os.Environ() {
+        //s := strings.Split(e, "=")
+        fmt.Printf("%s\n", e)
+    }
 }
