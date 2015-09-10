@@ -60,12 +60,12 @@ func main() {
 
 	// 类型断言,点(.)左边必须是一个接口类型的变量
 	b4 := Item(f1).(*Food) // 转换失败将出现异常
-	fmt.Println(b4)
+	fmt.Println(*b4)
 
 	// 检查类型断言
 	b5, ok := Item(f1).(*Food)
 	if ok {
-		fmt.Println(b5)
+		fmt.Printf("%v at %p", *b5, b5)
 	} else {
 		fmt.Println("类型断言失败")
 	}
