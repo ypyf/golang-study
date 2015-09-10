@@ -8,18 +8,18 @@ type Item interface {
 }
 
 type Book struct {
-	title string
-	price float32
+	title    string
+	price    float32
 	quantity int32
 }
 
 type Food struct {
-	title string
-	price float32
+	title    string
+	price    float32
 	quantity int32
 }
 
-type Car struct {}
+type Car struct{}
 
 // *Book实现了Item接口
 
@@ -43,7 +43,7 @@ func (f *Food) ShowTitle() string {
 
 func makeItemDesc(item Item) string {
 	return fmt.Sprintf("您选择的商品是 %s, 价格 %.2f",
-		                 item.ShowTitle(), item.ShowPrice())
+		item.ShowTitle(), item.ShowPrice())
 }
 
 func main() {
@@ -54,14 +54,15 @@ func main() {
 
 	// 字段的类型、名称和数量相同的类型之间可以转换
 	b2 := Book(*f1)
-	b3 := (*Book)(f1)	// 指针亦可转换
-  fmt.Println(makeItemDesc(&b2))
+	b3 := (*Book)(f1) // 指针亦可转换
+	fmt.Println(makeItemDesc(&b2))
 	fmt.Println(makeItemDesc(b3))
 
 	// 类型断言,点(.)左边必须是一个接口类型的变量
-	b4 := Item(f1).(*Food)	// 转换失败将出现异常
+	b4 := Item(f1).(*Food) // 转换失败将出现异常
 	fmt.Println(b4)
 
+	// 检查类型断言
 	b5, ok := Item(f1).(*Food)
 	if ok {
 		fmt.Println(b5)
