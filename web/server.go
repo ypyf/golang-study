@@ -22,5 +22,5 @@ func MyHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
     r := mux.NewRouter()
     r.HandleFunc("/", MyHandler)
-    http.ListenAndServe(":8000", r)
+    http.ListenAndServe(":80", r)
 }
