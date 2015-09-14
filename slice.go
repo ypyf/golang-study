@@ -22,6 +22,7 @@ func main() {
 	arr := [...]string{"hello", "world"}
 	fmt.Printf("arr.len = %d, arr.cap = %d\n", len(arr), cap(arr))
 
+	// 数组转换为slice
 	slice := new([2]int32)[:]
 	slice[0], slice[1] = 123, 456
 	fmt.Printf("slice = %v\n", slice)
