@@ -2,12 +2,14 @@ package main
 
 import (
     "fmt"
+    "log"
     "strings"
     "net/http"
     "github.com/gorilla/mux"
 )
 
 func MyHandler(w http.ResponseWriter, r *http.Request) {
+    log.Printf("客户端请求: %v %v\n", r.RemoteAddr, r.RequestURI)
     w.Write([]byte("响应：\n"))
     fmt.Fprintf(w, "方法：%v\n", r.Method)
     fmt.Fprintf(w, "URL：%v\n", r.URL)
@@ -22,5 +24,5 @@ func MyHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
     r := mux.NewRouter()
     r.HandleFunc("/", MyHandler)
-    http.ListenAndServe(":80", r)
+    http.ListenAndServe(":8080", r)
 }
