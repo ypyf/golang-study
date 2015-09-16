@@ -25,5 +25,6 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", handler)
+	r.HandleFunc("/{articles:[a-zA-Z]+}", handler)
 	http.ListenAndServe(":8080", r)
 }
