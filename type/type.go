@@ -46,7 +46,30 @@ func makeItemDesc(item Item) string {
 		item.ShowTitle(), item.ShowPrice())
 }
 
+type Computer interface {
+	Run()
+}
+
+type MacBook struct{}
+type iPhone struct{}
+
+func (mb *MacBook) Run() {
+	fmt.Println("MacBook Run")
+}
+
+func (i *iPhone) Run() {
+	fmt.Println("iPhone Run")
+}
+
+func RunMacBook(c Computer) {
+	a, ok := c.(*MacBook)
+	if ok {
+		a.Run()
+	}
+}
+
 func main() {
+	RunMacBook(&MacBook{})
 	b1 := &Book{"Programming in Go", 33.4, 10}
 	f1 := &Food{"西瓜", 50.0, 10}
 	fmt.Println(makeItemDesc(b1))
