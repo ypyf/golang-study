@@ -17,6 +17,7 @@ type rot13Reader struct {
 	r io.Reader
 }
 
+// 实现 Read([]byte) (int, error) 接口
 func (rot rot13Reader) Read(b []byte) (int, error) {
 	n, err := rot.r.Read(b)
 	if err == nil {
