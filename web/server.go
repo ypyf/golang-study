@@ -26,5 +26,5 @@ func main() {
 	r := mux.NewRouter()
 	r.HandleFunc("/", handler)
 	r.HandleFunc("/{articles:[a-zA-Z]+}", handler)
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":80", r)
 }
