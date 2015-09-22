@@ -1,11 +1,11 @@
 package main
 
-import "fmt"
+import "log"
 import "time"
 
 func Worker(sem chan int, lock chan<- struct{}, id int) {
 	sem <- 1 // down(P原语)
-	fmt.Println(time.Now().Format("15:04:05"), id)
+	log.Println(id)
 	time.Sleep(1 * time.Second) // 睡眠1秒钟
 	<-sem                       // up(V原语)
 
