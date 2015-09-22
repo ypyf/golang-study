@@ -6,29 +6,24 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	"net/url"
 )
 
 func HelloServer(w http.ResponseWriter, r *http.Request) {
-	//fmt.Println(r)
-	//log.Println(r.RequestURI)
 	req, _ := http.NewRequest(r.Method, r.RequestURI, r.Body)
+
 	for k, v := range r.Header {
 		for _, vv := range v {
 			req.Header.Add(k, vv)
 		}
 	}
-	//req.Header.Set("Content-Type", "application/x-www-form-urlencoded; param=value")
-
-	targetURL, _ := url.Parse("http://www.ifeng.com")
-	req.Host = targetURL.Host
-	req.URL.Scheme = targetURL.Scheme
-	req.URL.Host = targetURL.Host
-	req.URL.Path = targetURL.Path
-	req.Proto = "HTTP/1.1"
-	req.ProtoMajor = 1
-	req.ProtoMinor = 1
-	req.Close = false
+	req.Host = r.Host
+	req.URL.Scheme = r.URL.Scheme
+	req.URL.Host = r.URL.Host
+	req.URL.Path = r.URL.Path
+	req.Proto = r.Proto
+	req.ProtoMajor = r.ProtoMajor
+	req.ProtoMinor = r.ProtoMinor
+	req.Close = r.Close
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -55,7 +50,7 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 		log.Println("body :", err)
 	}
 	w.Write(body)
-	log.Println("成功完成一次代理服务;url:", r.URL)
+	log.Printf("完成代理服务: %v\n", r.URL)
 }
 
 func main() {
