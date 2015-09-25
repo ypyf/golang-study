@@ -1,24 +1,24 @@
-// http代理(Proxy Server) project main.go
-// 1871522910@qq.com
 package main
 
 import (
+	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-func HelloServer(w http.ResponseWriter, r *http.Request) {
+func ProxyServer(w http.ResponseWriter, r *http.Request) {
 	req, _ := http.NewRequest(r.Method, r.RequestURI, r.Body)
+	log.Println(r.URL)
 
 	for k, v := range r.Header {
 		for _, vv := range v {
 			req.Header.Add(k, vv)
 		}
 	}
-	req.Host = r.Host
-	req.URL.Scheme = r.URL.Scheme
-	req.URL.Host = r.URL.Host
+	req.Host = "192.168.4.4"
+	req.URL.Scheme = "http"
+	req.URL.Host = req.Host
 	req.URL.Path = r.URL.Path
 	req.Proto = r.Proto
 	req.ProtoMajor = r.ProtoMajor
@@ -54,8 +54,9 @@ func HelloServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", HelloServer)
-	err := http.ListenAndServe(":8088", nil)
+	r := mux.NewRouter()
+	r.HandleFunc(`/doc/{doc}`, ProxyServer)
+	err := http.ListenAndServe(":80", r)
 	if err != nil {
 		log.Println("ListenAndServe: ", err)
 	}
