@@ -9,7 +9,7 @@ var php_code string = `<?php
 phpinfo();
 `
 
-func RunPHP(code string) {
+func RunPHP(code string) error {
 	cmd := exec.Command("php")
 	p, err := cmd.StdinPipe()
 	if err != nil {
@@ -19,6 +19,7 @@ func RunPHP(code string) {
 	p.Close()
 	out, err := cmd.CombinedOutput()
 	log.Printf("%s\n", out)
+	return err
 }
 
 func main() {
