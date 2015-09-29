@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
+	"fmt"
 	"log"
+	"os"
 	"os/exec"
 )
 
@@ -18,10 +21,20 @@ func RunPHP(code string) error {
 	p.Write([]byte(code))
 	p.Close()
 	out, err := cmd.CombinedOutput()
-	log.Printf("%s\n", out)
+	if len(out) > 0 {
+		fmt.Printf("%s\n", out)
+	}
 	return err
 }
 
+func Repl() {
+	reader := bufio.NewReader(os.Stdin)
+	fmt.Print("> ")
+	text, _ := reader.ReadString('\n')
+	RunPHP(text)
+}
 func main() {
-	RunPHP(php_code)
+	for {
+		Repl()
+	}
 }
