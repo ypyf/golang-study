@@ -1,12 +1,13 @@
 package main
 
 import (
+	_ "expvar"
 	"fmt"
+	"github.com/gorilla/mux"
 	"log"
 	"net/http"
+	_ "net/http/pprof"
 	"strings"
-
-	"github.com/gorilla/mux"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -23,8 +24,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe(":6060", nil))
+	}()
 	r := mux.NewRouter()
 	r.HandleFunc("/", handler)
 	r.HandleFunc("/{articles:[a-zA-Z]+}", handler)
-	http.ListenAndServe(":80", r)
+	go http.ListenAndServe(":8080", r)
+	go http.ListenAndServe(":1234", nil)
+	ch := make(chan struct{})
+	<-ch
 }
