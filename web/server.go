@@ -1,12 +1,13 @@
 package main
 
 import (
-	_ "expvar"
+	"expvar"
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 	_ "net/http/pprof"
+	"runtime"
 	"strings"
 )
 
@@ -23,6 +24,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func goroutines() interface{} {
+	return runtime.NumGoroutine()
+}
+
 func main() {
 	go func() {
 		log.Println(http.ListenAndServe(":6060", nil))
@@ -31,6 +36,9 @@ func main() {
 	r.HandleFunc("/", handler)
 	r.HandleFunc("/{articles:[a-zA-Z]+}", handler)
 	go http.ListenAndServe(":8080", r)
+
+	// 监控
+	expvar.Publish("Goroutines", expvar.Func(goroutines))
 	go http.ListenAndServe(":1234", nil)
 	ch := make(chan struct{})
 	<-ch
