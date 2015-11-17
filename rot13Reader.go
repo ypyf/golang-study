@@ -14,12 +14,12 @@ const (
 )
 
 type rot13Reader struct {
-	r io.Reader
+	io.Reader
 }
 
 // 实现 Read([]byte) (int, error) 接口
 func (rot rot13Reader) Read(b []byte) (int, error) {
-	n, err := rot.r.Read(b)
+	n, err := rot.Reader.Read(b)
 	if err == nil {
 		for i := 0; i < n; i++ {
 			if unicode.IsUpper(rune(b[i])) {
