@@ -10,7 +10,7 @@ import (
 
 func main() {
 	cfg := client.Config{
-                Endpoints: []string{"http://localhost:2379", "http://localhost:4001"},
+		Endpoints: []string{"http://localhost:2379", "http://localhost:4001"},
 		Transport: client.DefaultTransport,
 		// set timeout per request to fail fast when the target endpoint is unavailable
 		HeaderTimeoutPerRequest: time.Second,
