@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-//"io/ioutil"
 	"io"
 	"net/http"
 	"os"
