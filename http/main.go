@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	resp, err := http.Get("www.baidu.com")
+	resp, err := http.Get("http://www.baidu.com")
 	if err != nil {
 		log.Fatalf("error %v\n", err)
 	}
