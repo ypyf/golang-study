@@ -63,8 +63,7 @@ func handleMessage(rtm *slack.RTM) {
 }
 
 func main() {
-	token := os.Getenv("SLACK_BOT_TOKEN")
-	api := slack.New(token)
+	api := slack.New(os.Getenv("SLACK_BOT_TOKEN"))
 	api.SetDebug(true)
 	rtm := api.NewRTM()
 	go rtm.ManageConnection()
