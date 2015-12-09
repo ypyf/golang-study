@@ -8,6 +8,7 @@ func (a *mytype) Error() string {
 	return "mytype error"
 }
 
+// 空指针转换为接口（error）后，并不是nil
 func foo() error {
 	var a *mytype = nil
 	return a
