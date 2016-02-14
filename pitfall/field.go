@@ -19,7 +19,8 @@ func ValidateUserAge(age int64) (int64, error) {
 
 func main() {
 	boss := user{name: "Zhang"}
-	//boss.age, err := ValidateUserAge(22)	// syntax error: field appers on left side of :=
+	// syntax error: field appers on left side of :=
+	//boss.age, err := ValidateUserAge(22)
 	age, err := ValidateUserAge(22)
 	if err != nil {
 		fmt.Println(err)
