@@ -19,8 +19,11 @@ func main() {
 	//fmt.Printf("%s", err)
 
 	// array & slice
-	arr := [...]string{"hello", "world"}
+	arr := [...]string{}
 	fmt.Printf("arr.len = %d, arr.cap = %d\n", len(arr), cap(arr))
+
+	arr2 := [...]string{"hello", "world"}
+	fmt.Printf("arr2.len = %d, arr2.cap = %d\n", len(arr2), cap(arr2))
 
 	// 数组转换为slice
 	slice := new([2]int32)[:]

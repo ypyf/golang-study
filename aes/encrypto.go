@@ -42,9 +42,9 @@ func DecryptAES(ciphertext, key []byte) ([]byte, error) {
 		ciphertext = ciphertext[bs:]
 	}
 
-	pad := int(plaintext2[len(plaintext2) - 1])
+	pad := int(plaintext2[len(plaintext2)-1])
 	if pad > bs {
 		return nil, errors.New("AES: 无效的 PKCS5 填充")
 	}
-	return plaintext2[:len(plaintext2) - pad], nil
+	return plaintext2[:len(plaintext2)-pad], nil
 }
