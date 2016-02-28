@@ -34,7 +34,6 @@ func main() {
 	} else {
 		fmt.Println(r)
 	}
-	fmt.Println(Sqrt(2))
 	fmt.Println(Sqrt(-2))
 	ch, _ := find("y")
 	fmt.Println(ch)
