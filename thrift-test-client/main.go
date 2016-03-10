@@ -36,13 +36,13 @@ func main() {
 	ctx := rpc.NewSessionContext()
 
 	sid, _ := client.CreateSession(ctx)
-	logrus.Infof("创新新的会话id => %s\n", sid)
+	logrus.Infof("创新新的会话id => %s", sid)
 
 	ctx, _ = client.GetSession(sid)
-	logrus.Infof("获取会话上下文 => %+v\n", ctx)
+	logrus.Infof("获取会话上下文 => %+v", ctx)
 
 	endTime := currentTimeMillis()
-	logrus.Infof("本次调用用时: %d 毫秒\n", endTime-startTime)
+	logrus.Infof("本次调用用时: %d 毫秒", endTime-startTime)
 
 }
 
