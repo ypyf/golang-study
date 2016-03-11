@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"git.apache.org/thrift.git/lib/go/thrift"
 	"thrift-test-server/service"
+
+	"git.apache.org/thrift.git/lib/go/thrift"
 	"github.com/Sirupsen/logrus"
 )
 

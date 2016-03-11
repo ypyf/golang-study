@@ -2,8 +2,9 @@ package service
 
 import (
 	"crypto/tls"
-	"git.apache.org/thrift.git/lib/go/thrift"
 	"wifi/session/rpc"
+
+	"git.apache.org/thrift.git/lib/go/thrift"
 	"github.com/Sirupsen/logrus"
 )
 
@@ -25,7 +26,7 @@ func runServer(transportFactory thrift.TTransportFactory, protocolFactory thrift
 	if err != nil {
 		return err
 	}
-	logrus.Debugf("%T\n", transport)
+	logrus.Debugf("%T", transport)
 	handler := NewSessionHandler()
 	processor := rpc.NewSessionManagerProcessor(handler)
 	server := thrift.NewTSimpleServer4(processor, transport, transportFactory, protocolFactory)

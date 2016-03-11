@@ -1,7 +1,5 @@
 // defines the namespace
 namespace go wifi.session.rpc
-namespace php wifi.session.rpc
-namespace java wifi.session.rpc
 
 const string VERSION = "1.0.0"
 
@@ -16,14 +14,19 @@ struct  SessionContext {
     8: required string version,
 }
 
+exception SerializeError {
+}
+
+exception UnserializeError {
+}
+
+exception IOError {
+}
+
 exception InvalidSession {
 }
 
-exception InvalidArguments {
-    1: required string why
-}
-
 service SessionManager {
-    string create_session(1: required SessionContext ctx),
-    SessionContext get_session(1: required string sid) throws (1:InvalidSession ouch),
+    string create_session(1: required SessionContext ctx) throws (1:SerializeError ouch1, 2:IOError ouch2),
+    SessionContext get_session_context(1: required string sid) throws (1:UnserializeError ouch1, 2:IOError ouch2, 3:InvalidSession ouch3),
 }
