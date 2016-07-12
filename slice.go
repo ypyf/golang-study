@@ -8,7 +8,7 @@ func someWrong() error {
 
 func main() {
 	s0 := make([]int32, 10)
-	s1 := append(s0, 12)
+	s0 := append(s0, 12)
 	fmt.Printf("len %d cap %d\n%v\n", len(s1), cap(s1), s1)
 	s1 = append(s1, 12)
 	fmt.Printf("len %d cap %d\n%v\n", len(s1), cap(s1), s1)
