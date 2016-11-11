@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"os"
 	"os/signal"
@@ -17,8 +18,8 @@ func openRedis() *redis.Client {
 	})
 }
 
-func eat() {
-	consumer, err := sarama.NewConsumer([]string{"10.10.40.151:9092"}, nil)
+func eat(topic string, partition int32) {
+	consumer, err := sarama.NewConsumer([]string{"10.10.93.146:9092"}, nil)
 	if err != nil {
 		panic(err)
 	}
@@ -29,7 +30,7 @@ func eat() {
 		}
 	}()
 
-	partitionConsumer, err := consumer.ConsumePartition("test", 0, sarama.OffsetNewest)
+	partitionConsumer, err := consumer.ConsumePartition(topic, partition, sarama.OffsetNewest)
 	if err != nil {
 		panic(err)
 	}
@@ -44,14 +45,14 @@ func eat() {
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt)
 
-	redis := openRedis()
+	//redis := openRedis()
 	consumed := 0
 ConsumerLoop:
 	for {
 		select {
 		case msg := <-partitionConsumer.Messages():
 			log.Printf("Consumed message offset %d\n", msg.Offset)
-			redis.SAdd("atime_ap", string(msg.Value))
+			//redis.SAdd("atime_ap", string(msg.Value))
 			//log.Printf("Consumed message offset %d\n", msg.Offset)
 			//log.Printf("Consumed message value %s\n", string(msg.Value))
 			consumed++
@@ -64,5 +65,8 @@ ConsumerLoop:
 }
 
 func main() {
-	eat()
+	var topic = flag.String("topic", "test", "主题")
+	var partition = flag.Int("partition", 0, "分区号")
+	flag.Parse()
+	eat(*topic, int32(*partition))
 }
