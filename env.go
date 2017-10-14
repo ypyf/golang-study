@@ -6,8 +6,8 @@ import "strings"
 
 func main() {
 	// 获取单个变量
-	foo := os.Getenv("FOO")
-	fmt.Println("FOO:", foo)
+	foo := os.Getenv("GOPATH")
+	fmt.Println("GOPATH:", foo)
 
 	// 获取全部变量
 	for _, e := range os.Environ() {
