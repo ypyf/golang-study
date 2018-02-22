@@ -1,13 +1,15 @@
-package main
+﻿package main
 
 import (
+	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
-	"net/http"
+	"net"
+	"net/url"
 	"os"
+	"strings"
 
-	"github.com/gorilla/mux"
 	"golang.org/x/net/proxy"
 )
 
@@ -25,58 +27,66 @@ func newSocks5Proxy(addr string) proxy.Dialer {
 	return dialer
 }
 
-func ProxyServer(dialer proxy.Dialer, w http.ResponseWriter, r *http.Request) {
-
-	log.Printf("original RequestURI: %s\n", r.RequestURI)
-
-	// 设置HTTP客户端
-	httpTransport := &http.Transport{}
-	httpClient := &http.Client{Transport: httpTransport}
-	httpTransport.Dial = dialer.Dial
-
-	uri := r.RequestURI
-	if r.URL.Port() == "443" {
-		uri = "https://" + r.RequestURI
-	}
-	log.Printf("New URI: %s\n", uri)
-	// // 创建HTTP请求
-	req, _ := http.NewRequest(r.Method, uri, r.Body)
-	println(req.URL.Scheme)
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
-		log.Println(err)
-		w.Write([]byte("代理服务器请求失败"))
+func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
+	if client == nil {
 		return
 	}
-	defer resp.Body.Close()
+	defer client.Close()
 
-	for k, v := range resp.Header {
-		for _, vv := range v {
-			w.Header().Add(k, vv)
+	var header [1024]byte
+	n, err := client.Read(header[:])
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	var method, host, address string
+	fmt.Sscanf(string(header[:bytes.IndexByte(header[:], '\n')]), "%s%s", &method, &host)
+	hostPortURL, err := url.Parse(host)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	if hostPortURL.Opaque == "443" {
+		address = hostPortURL.Scheme + ":443"
+	} else {
+		if strings.Index(hostPortURL.Host, ":") == -1 {
+			address = hostPortURL.Host + ":80"
+		} else {
+			address = hostPortURL.Host
 		}
 	}
 
-	for _, value := range resp.Request.Cookies() {
-		w.Header().Add(value.Name, value.Value)
-	}
-
-	w.WriteHeader(resp.StatusCode)
-
-	body, err := ioutil.ReadAll(resp.Body)
+	//获得了请求的host和port，就开始拨号吧
+	server, err := dialer.Dial("tcp", address)
 	if err != nil {
-		log.Println("body :", err)
+		log.Println(err)
+		return
 	}
-	w.Write(body)
-	log.Printf("完成代理服务: %v\n", req.URL)
+	if method == "CONNECT" {
+		fmt.Fprint(client, "HTTP/1.1 200 Connection established\r\n\r\n")
+	} else {
+		server.Write(header[:n])
+	}
+	//进行转发
+	go io.Copy(server, client)
+	io.Copy(client, server)
 }
 
 func main() {
 	dailer := newSocks5Proxy(PROXY_ADDR)
-	r := mux.NewRouter()
-	r.HandleFunc(`*/*`, func(w http.ResponseWriter, r *http.Request) { ProxyServer(dailer, w, r) })
-	err := http.ListenAndServe("127.0.0.1:8888", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { ProxyServer(dailer, w, r) }))
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	l, err := net.Listen("tcp", ":8888")
 	if err != nil {
-		log.Println("ListenAndServe: ", err)
+		log.Panic(err)
+	}
+
+	for {
+		client, err := l.Accept()
+		if err != nil {
+			log.Panic(err)
+		}
+
+		go handleClientRequest(dailer, client)
 	}
 }
