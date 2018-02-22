@@ -33,12 +33,6 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 	}
 	defer client.Close()
 
-	// scanner := bufio.NewScanner(client)
-	// if !scanner.Scan() {
-	// 	log.Printf("Bad HTTP Request\n")
-	// 	return
-	// }
-	// req := scanner.Bytes()
 	buf := make([]byte, 4096)
 	n, err := client.Read(buf)
 	if err != nil {
@@ -53,22 +47,26 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 	}
 
 	log.Printf("代理请求: %s\n", buf[:sep])
+
+	// 解析URL
 	var method, host, address string
-
 	fmt.Sscanf(string(buf[:sep]), "%s%s", &method, &host)
-	hostPortURL, err := url.Parse(host)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	if hostPortURL.Opaque == "443" {
-		address = hostPortURL.Scheme + ":443"
+	if method == "CONNECT" {
+		address = host
 	} else {
-		if strings.Index(hostPortURL.Host, ":") == -1 {
-			address = hostPortURL.Host + ":80"
+		hostPortURL, err := url.Parse(host)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		if hostPortURL.Opaque == "443" {
+			address = hostPortURL.Scheme + ":443"
 		} else {
-			address = hostPortURL.Host
+			if strings.Index(hostPortURL.Host, ":") == -1 {
+				address = hostPortURL.Host + ":80"
+			} else {
+				address = hostPortURL.Host
+			}
 		}
 	}
 
