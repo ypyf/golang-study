@@ -70,7 +70,6 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 		}
 	}
 
-	//获得了请求的host和port，就开始拨号吧
 	server, err := dialer.Dial("tcp", address)
 	if err != nil {
 		log.Println(err)
@@ -81,7 +80,7 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 	} else {
 		server.Write(buf[:n])
 	}
-	//进行转发
+
 	go io.Copy(server, client)
 	io.Copy(client, server)
 }
@@ -99,7 +98,6 @@ func main() {
 		if err != nil {
 			log.Panic(err)
 		}
-
 		go handleClientRequest(dailer, client)
 	}
 }
