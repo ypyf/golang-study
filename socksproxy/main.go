@@ -1,4 +1,4 @@
-﻿package main
+package main
 
 import (
 	"bytes"
@@ -33,14 +33,29 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 	}
 	defer client.Close()
 
-	var header [1024]byte
-	n, err := client.Read(header[:])
+	// scanner := bufio.NewScanner(client)
+	// if !scanner.Scan() {
+	// 	log.Printf("Bad HTTP Request\n")
+	// 	return
+	// }
+	// req := scanner.Bytes()
+	buf := make([]byte, 4096)
+	n, err := client.Read(buf)
 	if err != nil {
 		log.Println(err)
 		return
 	}
+
+	sep := bytes.IndexByte(buf, '\n')
+	if sep == -1 {
+		log.Printf("Bad HTTP Request\n")
+		return
+	}
+
+	log.Printf("代理请求: %s\n", buf[:sep])
 	var method, host, address string
-	fmt.Sscanf(string(header[:bytes.IndexByte(header[:], '\n')]), "%s%s", &method, &host)
+
+	fmt.Sscanf(string(buf[:sep]), "%s%s", &method, &host)
 	hostPortURL, err := url.Parse(host)
 	if err != nil {
 		log.Println(err)
@@ -66,7 +81,7 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 	if method == "CONNECT" {
 		fmt.Fprint(client, "HTTP/1.1 200 Connection established\r\n\r\n")
 	} else {
-		server.Write(header[:n])
+		server.Write(buf[:n])
 	}
 	//进行转发
 	go io.Copy(server, client)
@@ -75,7 +90,7 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 
 func main() {
 	dailer := newSocks5Proxy(PROXY_ADDR)
-	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	// log.SetFlags(log.LstdFlags | log.Lshortfile)
 	l, err := net.Listen("tcp", ":8888")
 	if err != nil {
 		log.Panic(err)
