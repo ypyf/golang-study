@@ -119,10 +119,12 @@ func main() {
 			startSocks5Proxy(true)
 		case "http":
 			startHttp5Proxy()
+		case "noproxy":
+			startSocks5Proxy(false)
 		default:
-			println("usage: socksproxy [socks5 | http]")
+			println("usage: socksproxy [noproxy | socks5 | http]")
 		}
 	} else {
-		startSocks5Proxy(false)
+		startSocks5Proxy(true)
 	}
 }
