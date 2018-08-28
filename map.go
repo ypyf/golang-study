@@ -1,14 +1,10 @@
 package main
 
-import "fmt"
-
 func main() {
-    done := make(chan struct{})
-    
-    go func() {
-        fmt.Println("Hello World")
-        done <- struct{}{}
-    }()
-    
-    <-done
+	a := make(map[string]int)
+	a["hello"] = 1
+	a["world"] = 2
+	for k, v := range a {
+		println(k, v)
+	}
 }
