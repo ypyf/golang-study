@@ -13,10 +13,6 @@ import (
 	"golang.org/x/net/proxy"
 )
 
-const (
-	PROXY_ADDR = "ali.lerry.me:52344"
-)
-
 func newSocks5Proxy(addr string) proxy.Dialer {
 	// create a socks5 dialer
 	dialer, err := proxy.SOCKS5("tcp", addr, nil, proxy.Direct)
@@ -70,8 +66,14 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 		}
 	}
 
-	//获得了请求的host和port，就开始拨号吧
-	server, err := dialer.Dial("tcp", address)
+	var server net.Conn
+
+	if dialer != nil {
+		server, err = dialer.Dial("tcp", address)
+	} else {
+		server, err = net.Dial("tcp", address)
+	}
+
 	if err != nil {
 		log.Println(err)
 		return
@@ -81,13 +83,16 @@ func handleClientRequest(dialer proxy.Dialer, client net.Conn) {
 	} else {
 		server.Write(buf[:n])
 	}
-	//进行转发
+
 	go io.Copy(server, client)
 	io.Copy(client, server)
 }
 
-func main() {
-	dailer := newSocks5Proxy(PROXY_ADDR)
+func startSocks5Proxy(useProxy bool) {
+	var dailer proxy.Dialer = nil
+	if useProxy {
+		dailer = newSocks5Proxy(os.Getenv("SOCKS5_PROXY_ADDR"))
+	}
 	// log.SetFlags(log.LstdFlags | log.Lshortfile)
 	l, err := net.Listen("tcp", ":8888")
 	if err != nil {
@@ -99,7 +104,27 @@ func main() {
 		if err != nil {
 			log.Panic(err)
 		}
-
 		go handleClientRequest(dailer, client)
+	}
+}
+
+func startHttp5Proxy() {
+	println("HTTP Proxy 未实现")
+}
+
+func main() {
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "socks5":
+			startSocks5Proxy(true)
+		case "http":
+			startHttp5Proxy()
+		case "noproxy":
+			startSocks5Proxy(false)
+		default:
+			println("usage: socksproxy [noproxy | socks5 | http]")
+		}
+	} else {
+		startSocks5Proxy(true)
 	}
 }
