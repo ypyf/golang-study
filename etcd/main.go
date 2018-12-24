@@ -1,16 +1,16 @@
 package main
 
 import (
+	"context"
 	"log"
 	"time"
 
-	"github.com/coreos/etcd/Godeps/_workspace/src/golang.org/x/net/context"
-	"github.com/coreos/etcd/client"
+	"go.etcd.io/etcd/client"
 )
 
 func main() {
 	cfg := client.Config{
-		Endpoints: []string{"http://localhost:2379", "http://localhost:4001"},
+		Endpoints: []string{"http://localhost:2379"},
 		Transport: client.DefaultTransport,
 		// set timeout per request to fail fast when the target endpoint is unavailable
 		HeaderTimeoutPerRequest: time.Second,
@@ -20,9 +20,11 @@ func main() {
 		log.Fatal(err)
 	}
 	kapi := client.NewKeysAPI(c)
-	resp, err := kapi.Set(context.Background(), "foo", "bar", nil)
+	ctx := context.Background()
+	resp, err := kapi.Get(ctx, "/foo", nil)
+	//resp, err := kapi.Set(context.Background(), "foo", "bar", nil)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println(resp)
+	log.Println(resp.Node.Key, resp.Node.Value)
 }
