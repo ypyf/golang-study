@@ -4,10 +4,10 @@ import "log"
 import "time"
 
 func Worker(sem chan int, lock chan<- struct{}, id int) {
-	sem <- 1 // down(P原语)
+	sem <- 1                      // down(P原语)
 	log.Println(id)
-	time.Sleep(1 * time.Second) // 睡眠1秒钟
-	<-sem                       // up(V原语)
+	time.Sleep(1 * time.Second)
+	<-sem                         // up(V原语)
 
 	lock <- struct{}{}
 }

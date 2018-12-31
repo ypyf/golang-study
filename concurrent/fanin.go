@@ -20,7 +20,7 @@ func boring(msg string) <-chan string {
 func fanIn(input1, input2, input3 <-chan string) <-chan string {
 	c := make(chan string)
 	go func() {
-		for {
+		for i := 0; i < 30; i++ {
 			select {
 			case s := <-input1:
 				c <- s
@@ -30,14 +30,15 @@ func fanIn(input1, input2, input3 <-chan string) <-chan string {
 				c <- s
 			}
 		}
+		close(c)
 	}()
 	return c
 }
 
 func main() {
 	c := fanIn(boring("Joe"), boring("Mark"), boring("Ann"))
-	for i := 0; i < 500; i++ {
-		fmt.Println(<-c)
+	for x := range c {
+		fmt.Println(x)
 	}
 	fmt.Println("You're boring; I'm leaving.")
 }
