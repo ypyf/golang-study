@@ -1,27 +1,38 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os/exec"
 )
 
-var php_code string = `<?php
-phpinfo();
-`
-
-func RunPHP(code string) error {
+func RunPHP(code string) (string, error) {
 	cmd := exec.Command("php")
 	p, err := cmd.StdinPipe()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalln(err)
 	}
-	p.Write([]byte(code))
-	p.Close()
+	_, err = p.Write([]byte(code))
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if err = p.Close(); err != nil {
+		log.Fatalln(err)
+	}
 	out, err := cmd.CombinedOutput()
-	log.Printf("%s\n", out)
-	return err
+	return string(out), err
 }
 
 func main() {
-	RunPHP(php_code)
+	out, err := RunPHP(`<?php 
+		$a = 123;
+		$b = 456;
+		$c = $a * $b;
+		echo "$c\n"; 
+	?>`)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	fmt.Println(out)
 }
