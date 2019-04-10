@@ -7,16 +7,7 @@ import (
 	"os/signal"
 
 	"github.com/Shopify/sarama"
-	"gopkg.in/redis.v3"
 )
-
-func openRedis() *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr:     "10.10.149.62:6379",
-		Password: "",
-		DB:       0, // use default DB
-	})
-}
 
 func eat(topic string, partition int32) {
 	consumer, err := sarama.NewConsumer([]string{"10.10.93.146:9092"}, nil)

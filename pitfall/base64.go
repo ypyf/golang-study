@@ -21,8 +21,7 @@ func main() {
 
 	// 只有用下面的方法才能解码成功
 	str := make([]byte, 100)
-	encoder := base64.NewDecoder(base64.StdEncoding,
-		strings.NewReader(BASE64STR))
-	encoder.Read(str)
+	decoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(BASE64STR))
+	decoder.Read(str)
 	fmt.Printf("%+v\n", str)
 }

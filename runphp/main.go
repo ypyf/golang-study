@@ -25,11 +25,12 @@ func RunPHP(code string) (string, error) {
 }
 
 func main() {
-	out, err := RunPHP(`<?php 
+	out, err := RunPHP(`<?php
+		echo phpinfo();
 		$a = 123;
 		$b = 456;
 		$c = $a * $b;
-		echo "$c\n"; 
+		echo "$c\n";
 	?>`)
 	if err != nil {
 		log.Fatalln(err)

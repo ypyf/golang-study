@@ -8,7 +8,7 @@ func someWrong() error {
 
 func main() {
 	s0 := make([]int32, 10)
-	s0 := append(s0, 12)
+	s1 := append(s0, 12)
 	fmt.Printf("len %d cap %d\n%v\n", len(s1), cap(s1), s1)
 	s1 = append(s1, 12)
 	fmt.Printf("len %d cap %d\n%v\n", len(s1), cap(s1), s1)
@@ -18,9 +18,9 @@ func main() {
 	//err := someWrong()
 	//fmt.Printf("%s", err)
 
-	// array & slice
+	// array
 	arr := [...]string{}
-	fmt.Printf("arr.len = %d, arr.cap = %d\n", len(arr), cap(arr))
+	fmt.Printf("type:%T, arr.len = %d, arr.cap = %d\n", arr, len(arr), cap(arr))
 
 	arr2 := [...]string{"hello", "world"}
 	fmt.Printf("arr2.len = %d, arr2.cap = %d\n", len(arr2), cap(arr2))

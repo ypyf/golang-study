@@ -15,7 +15,7 @@ func Sqrt(x float64) (z float64) {
 		/*if math.Abs(z0 - z) < 0.001 {
 			return
 		}*/
-		if math.Abs(math.Sqrt(x)-z) < 0.0001 {
+		if math.Abs(z*z - x) < 0.001 {
 			return
 		}
 

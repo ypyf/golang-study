@@ -21,7 +21,7 @@ type rot13Reader struct {
 func (rot rot13Reader) Read(b []byte) (int, error) {
 	n, err := rot.Reader.Read(b)
 	if err != nil {
-		return n, err
+		return 0, err
 	}
 	for i := 0; i < n; i++ {
 		if unicode.IsUpper(rune(b[i])) {
@@ -41,14 +41,6 @@ func (rot rot13Reader) Read(b []byte) (int, error) {
 		}
 	}
 	return n, err
-}
-
-func debuger() {
-	var a int16 = 's'
-	var b int32 = 'b'
-	b = int32(a)
-	fmt.Println(a)
-	fmt.Println(b)
 }
 
 func main() {

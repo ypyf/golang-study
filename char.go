@@ -4,7 +4,7 @@ import "fmt"
 import "strings"
 
 func main() {
-	// 字符（Unicode码点）的类型是 rune 或 int32
+	// 每个字符类型保存一个Unicode码点
 	c := 's'
 	fmt.Printf("字符的类型为 %T\n", c)
 
@@ -30,7 +30,8 @@ func main() {
 	}
 	fmt.Println()
 
-	// 转换string为[]rune，就可以直接索引非ASCII字符
+	// string转换为[]rune，将utf8编码的字符串转为unicode码点
+	// 可以直接索引非ASCII字符
 	r := []rune(s)
 	fmt.Printf("%c\n", r[10])
 }

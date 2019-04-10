@@ -19,14 +19,6 @@ func Sqrt(x float64) (float64, error) {
 	}
 }
 
-func find(ch string) (string, error) {
-	if ch == "y" {
-		return ch, nil
-	} else {
-		return "", fmt.Errorf("错误")
-	}
-}
-
 func main() {
 	r, e := Sqrt(2)
 	if e != nil {
@@ -34,7 +26,4 @@ func main() {
 	} else {
 		fmt.Println(r)
 	}
-	fmt.Println(Sqrt(-2))
-	ch, _ := find("y")
-	fmt.Println(ch)
 }

@@ -22,7 +22,7 @@ func main() {
 	}
 	kapi := client.NewKeysAPI(c)
 	ctx := context.Background()
-	resp, err := kapi.Set(context.Background(), "foo", "123", nil)
+	resp, err := kapi.Set(ctx, "foo", "123", nil)
 	if err != nil {
 		log.Fatalf("Couldn't set node: %v\n", err)
 	}
