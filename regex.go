@@ -1,16 +1,17 @@
 package main
 
-import "fmt"
-import "regexp"
+import (
+	"fmt"
+	"regexp"
+)
 
 const text = `abc
 efg
 123`
 
 func main() {
-	reg := regexp.MustCompile("(?m)^\\w+")
-	result := reg.FindAllString(text, -1)
-	for _, w := range result {
+	reg := regexp.MustCompile(`(?m)^\w+`)
+	for _, w := range reg.FindAllString(text, -1) {
 		fmt.Println(w)
 	}
 }

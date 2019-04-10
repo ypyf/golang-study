@@ -43,7 +43,6 @@ func main() {
 
 	endTime := currentTimeMillis()
 	logrus.Infof("本次调用用时: %d 毫秒", endTime-startTime)
-
 }
 
 func currentTimeMillis() int64 {

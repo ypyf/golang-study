@@ -1,7 +1,6 @@
 package main
 
 func main() {
-
 	a := make(chan int, 1)
 	b := make(chan string, 1)
 

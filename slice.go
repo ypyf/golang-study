@@ -2,8 +2,10 @@ package main
 
 import "fmt"
 
-func someWrong() error {
-	return fmt.Errorf("sss")
+func removeElement() {
+	a := []int{0, 1, 2, 3, 4, 5}
+	a = append(a[:2], a[3:]...)
+	fmt.Printf("%v\n", a)
 }
 
 func main() {
@@ -15,8 +17,6 @@ func main() {
 	ps0 := &s0
 	pps0 := &ps0
 	fmt.Printf("ps0 %v\npps0 %v\n", *ps0, **pps0)
-	//err := someWrong()
-	//fmt.Printf("%s", err)
 
 	// array
 	arr := [...]string{}
@@ -34,4 +34,6 @@ func main() {
 	a, b := []int{1, 2}, []int{3, 4}
 	c := [][]int{a, b}
 	fmt.Println(c)
+
+	removeElement()
 }
