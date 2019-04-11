@@ -39,7 +39,16 @@ func (g Game) String() string {
 	return fmt.Sprintf("%s", "游戏程序")
 }
 
+type MyInterface interface {
+}
+
+func (p *MyInterface) Foo() {
+	println("Foo")
+}
+
 func main() {
+	var m *MyInterface
+	m.Foo()
 	var c Program
 
 	c = &Game{}
