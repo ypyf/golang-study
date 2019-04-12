@@ -1,23 +1,34 @@
 package main
 
-import "github.com/firstrow/tcp_server"
+import (
+	"bytes"
+	"io"
+	"log"
+	"net"
+)
 
 func main() {
-	server := tcp_server.New(":9999")
-
-	server.OnNewClient(func(c *tcp_server.Client) {
-		// new client connected
-		// lets send some message
-		c.Send("Hello")
-	})
-
-	server.OnNewMessage(func(c *tcp_server.Client, message string) {
-		// new message received
-	})
-
-	server.OnClientConnectionClosed(func(c *tcp_server.Client, err error) {
-		// connection with client lost
-	})
-
-	server.Listen()
+	server, err := net.Listen("tcp", ":http")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer server.Close()
+	for {
+		conn, err := server.Accept()
+		if err != nil {
+			log.Println(err)
+		} else {
+			go func() {
+				var buf bytes.Buffer
+				_, err := io.Copy(&buf, conn)
+				if err != nil {
+					log.Println(err)
+				} else {
+					log.Printf("%s\n", buf.String())
+					conn.Write([]byte("Hello"))
+					conn.Close()
+				}
+			}()
+		}
+	}
 }
