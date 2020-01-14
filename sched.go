@@ -8,11 +8,16 @@ import (
 	"time"
 )
 
+// select 会阻塞goroutine，但不会阻止调度，而是会让出P
 func sched() {
+	select {
+	}
+}
+
+// for 会阻止调度，但不会阻塞当前goroutine
+// 除非主动调用 runtime.Gosched()
+func loop() {
 	for {
-		runtime.Gosched()
-		time.Sleep(time.Second)
-		println("gosched()")
 	}
 }
 
@@ -25,13 +30,6 @@ func block() {
 	fmt.Println(text)
 }
 
-// 运行后该goroutine将无法被调离
-// 除非主动调用 runtime.Gosched()
-func loop() {
-	for {
-	}
-}
-
 func main() {
 	ch := make(chan int)
 	// 设置P的数量
@@ -42,5 +40,5 @@ func main() {
 	go sched()
 	go block()
 	go loop()
-	<- ch
+	<-ch
 }
