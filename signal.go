@@ -1,9 +1,12 @@
 package main
 
-import "fmt"
-import "os"
-import "os/signal"
-import "syscall"
+import (
+	"fmt"
+	"os"
+	"os/signal"
+	"sync"
+	"syscall"
+)
 
 func main() {
 	go func(x ...int) {
@@ -12,6 +15,13 @@ func main() {
 
 	sig := make(chan os.Signal)
 	signal.Notify(sig, syscall.SIGINT)
-	<-sig
-	fmt.Println("Program exit (Ctrl+C).")
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		<-sig
+		fmt.Println("Program exit (Ctrl+C).")
+		wg.Done()
+	}()
+
+	wg.Wait()
 }
