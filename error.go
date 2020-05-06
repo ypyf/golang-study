@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"math"
 )
@@ -19,11 +20,25 @@ func Sqrt(x float64) (float64, error) {
 	}
 }
 
+func returnError() error {
+	return FooError
+}
+
+var (
+	FooError = errors.New("Foo error")
+)
+
 func main() {
 	r, e := Sqrt(2)
 	if e != nil {
 		fmt.Println(e)
 	} else {
 		fmt.Println(r)
+	}
+	err := returnError()
+	if err != nil {
+		if err == FooError {
+			println("foo error")
+		}
 	}
 }

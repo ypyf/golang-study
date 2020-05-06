@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func removeElement() {
 	a := []int{0, 1, 2, 3, 4, 5}
@@ -36,4 +39,8 @@ func main() {
 	fmt.Println(c)
 
 	removeElement()
+
+	// Join slice
+	scopes := []string{"email", "sms"}
+	fmt.Println(strings.Join(scopes, ","))
 }

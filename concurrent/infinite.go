@@ -9,7 +9,6 @@ import (
 func main() {
 	var result int
 	processors := runtime.GOMAXPROCS(0)
-	println(processors)
 	for i := 0; i < processors; i++ {
 		go func() {
 			for {
